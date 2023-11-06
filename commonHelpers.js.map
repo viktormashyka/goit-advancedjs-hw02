@@ -1,0 +1,1 @@
+{"version":3,"file":"commonHelpers.js","sources":["../src/js/01-color-switcher.js"],"sourcesContent":["const startBtn = document.querySelector('button[data-start]');\nconst stopBtn = document.querySelector('button[data-stop]');\n"],"names":[],"mappings":"wFAAiB,SAAS,cAAc,oBAAoB,EAC5C,SAAS,cAAc,mBAAmB"}
