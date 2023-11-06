@@ -8,6 +8,8 @@ const startBtn = document.querySelector('button[data-start]');
 const stopBtn = document.querySelector('button[data-stop]');
 const bgColor = document.querySelector('body');
 
+stopBtn.setAttribute('disabled', true);
+
 let timerId = null;
 
 const onClickStart = startBtn.addEventListener('click', () => {
@@ -20,11 +22,17 @@ const onClickStart = startBtn.addEventListener('click', () => {
 const onClickStop = stopBtn.addEventListener('click', handleClickStop);
 
 function handleClickStart() {
-  const color = (bgColor.style.backgroundColor = `#${getRandomHexColor()}`);
+  bgColor.style.backgroundColor = `#${getRandomHexColor()}`;
+
+  startBtn.setAttribute('disabled', true);
+  stopBtn.removeAttribute('disabled');
 }
 
 function handleClickStop() {
   clearInterval(timerId);
   bgColor.style.backgroundColor = '';
   timerId = null;
+
+  stopBtn.setAttribute('disabled', true);
+  startBtn.removeAttribute('disabled');
 }
