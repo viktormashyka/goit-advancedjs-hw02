@@ -1,8 +1,10 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+
 let countdown = 0;
-let timeObject = {};
 let timerId = null;
 
 const options = {
@@ -14,7 +16,11 @@ const options = {
     countdown = selectedDates[0] - Date.now();
 
     if (countdown < 0) {
-      alert('Please choose a date in the future');
+      iziToast.error({
+        theme: 'red',
+        position: 'topRight',
+        message: 'Please choose a date in the future',
+      });
       return;
     }
 
@@ -45,27 +51,27 @@ function handleClickStart() {
   if (countdown < 1000) {
     clearInterval(timerId);
   }
-  timeObject = millisecondsToTime(countdown);
+  const { days, hours, minutes, seconds } = convertMs(countdown);
   countdown -= 1000;
 
-  elements.days.textContent = timeObject.getDays;
-  elements.hours.textContent = timeObject.getHours;
-  elements.minutes.textContent = timeObject.getMinutes;
-  elements.seconds.textContent = timeObject.getSeconds;
+  const addLeadingZero = value => value.toString().padStart(2, '0');
+
+  elements.days.textContent = addLeadingZero(days);
+  elements.hours.textContent = addLeadingZero(hours);
+  elements.minutes.textContent = addLeadingZero(minutes);
+  elements.seconds.textContent = addLeadingZero(seconds);
 }
 
-function millisecondsToTime(ms) {
-  let getSeconds = Math.floor((ms / 1000) % 60);
-  let getMinutes = Math.floor((ms / (1000 * 60)) % 60);
-  let getHours = Math.floor((ms / (1000 * 60 * 60)) % 24);
-  let getDays = Math.floor(ms / (1000 * 60 * 60 * 24));
+function convertMs(ms) {
+  const second = 1000;
+  const minute = second * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
 
-  const pad = num => num.toString().padStart(2, '0');
+  const days = Math.floor(ms / day);
+  const hours = Math.floor((ms % day) / hour);
+  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
-  return {
-    getDays: pad(getDays),
-    getHours: pad(getHours),
-    getMinutes: pad(getMinutes),
-    getSeconds: pad(getSeconds),
-  };
+  return { days, hours, minutes, seconds };
 }
