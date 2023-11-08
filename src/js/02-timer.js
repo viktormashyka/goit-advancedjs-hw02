@@ -7,6 +7,14 @@ import 'izitoast/dist/css/iziToast.min.css';
 let countdown = 0;
 let timerId = null;
 
+const elements = {
+  startBtn: document.querySelector('button[data-start]'),
+  days: document.querySelector('span[data-days]'),
+  hours: document.querySelector('span[data-hours]'),
+  minutes: document.querySelector('span[data-minutes]'),
+  seconds: document.querySelector('span[data-seconds]'),
+};
+
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -16,7 +24,7 @@ const options = {
     countdown = selectedDates[0] - Date.now();
 
     if (countdown < 0) {
-      iziToast.error({
+      iziToast.info({
         theme: 'red',
         position: 'topRight',
         message: 'Please choose a date in the future',
@@ -28,15 +36,9 @@ const options = {
   },
 };
 
-flatpickr('#datetime-picker', options);
+const datePicker = flatpickr('#datetime-picker', options);
 
-const elements = {
-  startBtn: document.querySelector('button[data-start]'),
-  days: document.querySelector('span[data-days]'),
-  hours: document.querySelector('span[data-hours]'),
-  minutes: document.querySelector('span[data-minutes]'),
-  seconds: document.querySelector('span[data-seconds]'),
-};
+console.log('datePicker: ', datePicker._input);
 
 elements.startBtn.setAttribute('disabled', true);
 
@@ -48,8 +50,13 @@ elements.startBtn.addEventListener('click', () => {
 });
 
 function handleClickStart() {
+  elements.startBtn.setAttribute('disabled', true);
+  datePicker._input.setAttribute('disabled', true);
+
   if (countdown < 1000) {
     clearInterval(timerId);
+    elements.startBtn.removeAttribute('disabled');
+    datePicker._input.removeAttribute('disabled');
   }
   const { days, hours, minutes, seconds } = convertMs(countdown);
   countdown -= 1000;
